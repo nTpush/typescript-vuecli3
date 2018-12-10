@@ -1,16 +1,19 @@
 <template>
-  <div class="alert" v-if="show">
-    <div :class="[type, 'alert__container']">
-      <span class="alert__container__title">温馨提示：</span>
-      <span class="alert__container__text">{{text}}</span>
-      <span class="alert__container__close" @click="close">✘</span>
-    </div>
+  <div class="alert">
+    <transition name="slide-fade">
+      <div :class="[type, 'alert__container']" v-if="show">
+        <span class="alert__container__title">温馨提示：</span>
+        <span class="alert__container__text">{{text}}</span>
+        <span class="alert__container__close" @click="close">✘</span>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { State, Getter, Action, Mutation, namespace } from "vuex-class";
+let themVue: any = Vue;
 
 @Component
 export default class Loading extends Vue {
@@ -21,7 +24,7 @@ export default class Loading extends Vue {
    * 关闭
    */
   close() {
-    this.show = false;
+    themVue.$alert.hide();
   }
 }
 </script>
@@ -29,15 +32,21 @@ export default class Loading extends Vue {
 <style lang="stylus">
 @import '../../assets/stylus/them';
 
+.alert {
+  position: absolute;
+  right: 0;
+  overflow: hidden;
+}
+
 .alert__container {
   padding: 8px 10px;
   background-color: red;
-  position: absolute;
   font-size: 14px;
   border-radius: 2px;
   display: flex;
   border: 1px solid rgba(0, 0, 0, 0.01);
   right: 0;
+  margin-bottom: 10px;
 }
 
 .alert__container span {
@@ -82,5 +91,18 @@ export default class Loading extends Vue {
 .primary {
   color: primary;
   background-color: background__primary;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(100px);
+  opacity: 0;
 }
 </style>
